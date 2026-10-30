@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meta Diária</title>
+    
+    <link rel="stylesheet" href="style.css">
+    
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div id="auth-view">
+            <div id="login-view">
+                <h1>Meta Diária - Login</h1>
+                <form id="login-form">
+                    <p id="login-error" class="error-message"></p>
+                    <input type="email" id="email" placeholder="Seu e-mail" required>
+                    <input type="password" id="password" placeholder="Sua senha" required>
+                    <button type="submit">Entrar</button>
+                </form>
+                <p style="text-align: center; margin-top: 1rem;">
+                    Não tem uma conta? <a href="#" id="show-register-link">Cadastre-se</a>
+                </p>
+            </div>
+            <div id="register-view" style="display: none;">
+                <h1>Meta Diária - Cadastro</h1>
+                <form id="register-form">
+                    <p id="register-error" class="error-message"></p>
+                    <label for="register-name">Nome</label>
+                    <input type="text" id="register-name" placeholder="Seu nome completo" required>
+                    <label for="register-email">E-mail</label>
+                    <input type="email" id="register-email" placeholder="Seu melhor e-mail" required>
+                    <label for="register-password">Senha</label>
+                    <input type="password" id="register-password" placeholder="Mínimo 6 caracteres" required>
+                    <button type="submit">Criar Conta</button>
+                </form>
+                <p style="text-align: center; margin-top: 1rem;">
+                    Já tem uma conta? <a href="#" id="show-login-link">Faça o login</a>
+                </p>
+            </div>
+        </div>
+
+        <div id="dashboard-view" style="display: none;">
+            <div class="header-info">
+                <h1>Minhas Metas</h1>
+                <p id="info-usuario"></p>
+                <button id="edit-name-button" class="btn-icon" title="Editar nome"></button>
+                <button id="logout-button" class="btn-danger">Sair</button>
+            </div>
+            <div class="toolbar">
+                <button id="create-meta-button" class="btn-success">Criar Nova Meta</button>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nome da Meta</th>
+                            <th>Progresso</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="metas-table-body"></tbody>
+                </table>
+            </div>
+             <div id="no-meta-view" style="display: none; text-align: center; margin-top: 2rem;">
+                <h2>Nenhuma meta encontrada.</h2>
+                <p>Clique no botão "Criar Nova Meta" para começar!</p>
+            </div>
+            <div class="chart-container" style="display: none;">
+                <div class="chart-header">
+                    <h2>Fluxo Mensal</h2>
+                    <div class="chart-nav">
+                        <button id="prev-month-btn" class="btn-icon" title="Mês Anterior">&lt;</button>
+                        <span id="current-month-label"></span>
+                        <button id="next-month-btn" class="btn-icon" title="Próximo Mês">&gt;</button>
+                    </div>
+                </div>
+                <canvas id="fluxoMensalChart"></canvas>
+            </div>
+        </div>
+        
+        <div id="detail-view" style="display: none;">
+            <div class="header-info">
+                <h1 id="detail-title">Detalhes da Meta</h1>
+                <button id="back-to-table-btn">&larr; Voltar para Todas as Metas</button>
+            </div>
+            <div id="detail-dashboard-content">
+                <p class="info">Meta: <span id="detail-valor-meta"></span></p>
+                <h3>Progresso</h3>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="detail-progresso-barra">0%</div>
+                </div>
+                <p class="info">Total Arrecadado: <span id="detail-total-arrecadado"></span></p>
+                <p class="info">Faltam: <span id="detail-valor-faltante"></span></p>
+                
+                <h2 style="margin-top: 2rem;">Registrar Novo Ganho</h2>
+                <form id="detail-ganho-form">
+                    <p id="detail-ganho-error" class="error-message"></p>
+                    <input type="number" id="detail-valor-ganho" placeholder="Ex: 150.50" step="0.01" required>
+                    <input type="text" id="detail-fonte-ganho" placeholder="Fonte (opcional): Ex: Uber, Freelance">
+                    <button type="submit" class="btn-success">Adicionar Ganho</button>
+                </form>
+
+                <h3 style="margin-top: 2rem;">Histórico de Ganhos</h3>
+                <ul id="detail-lista-ganhos"></ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="create-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h2>Criar Nova Meta</h2>
+            <form id="create-meta-form">
+                <label for="create-nome-meta">Nome da Meta</label>
+                <input type="text" id="create-nome-meta" placeholder="Ex: Quitar Dívida do Carro" required>
+                <label for="create-valor-meta">Valor da Meta (R$)</label>
+                <input type="number" id="create-valor-meta" step="0.01" placeholder="Ex: 5000.00" required>
+                <label for="create-data-prazo">Data Prazo (Opcional)</label>
+                <input type="date" id="create-data-prazo">
+                <div class="modal-actions">
+                    <button type="submit" class="btn-success">Criar Meta</button>
+                    <button type="button" id="cancel-create-button" class="btn-danger">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div id="edit-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h2>Editar Meta</h2>
+            <form id="edit-meta-form">
+                <input type="hidden" id="edit-meta-id">
+                <label for="edit-nome-meta">Nome da Meta</label>
+                <input type="text" id="edit-nome-meta" required>
+                <label for="edit-valor-meta">Valor da Meta</label>
+                <input type="number" id="edit-valor-meta" step="0.01" required>
+                <label for="edit-data-prazo">Data Prazo</label>
+                <input type="date" id="edit-data-prazo">
+                <div class="modal-actions">
+                    <button type="submit">Salvar Alterações</button>
+                    <button type="button" id="cancel-edit-button" class="btn-danger">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="ganho-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h2>Registrar Novo Ganho</h2>
+            <h3 id="ganho-modal-title"></h3>
+            <form id="ganho-form">
+                <input type="hidden" id="ganho-meta-id">
+                <label for="valor-ganho">Valor Ganho (R$)</label>
+                <input type="number" id="valor-ganho" placeholder="150.50" step="0.01" required>
+                <label for="fonte-ganho">Fonte (Opcional)</label>
+                <input type="text" id="fonte-ganho" placeholder="Ex: Uber, Freelance">
+                <div class="modal-actions">
+                    <button type="submit" class="btn-success">Adicionar</button>
+                    <button type="button" id="cancel-ganho-button" class="btn-danger">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js" defer></script>
+</body>
+</html>
