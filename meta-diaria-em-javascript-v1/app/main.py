@@ -6,7 +6,7 @@ from app.api import auth, metas, ganhos, perfil, relatorios
 
 app = FastAPI(
     title="Meta Diária API",
-    description="API para o SaaS Meta Diária, focado em ajudar usuários a quitarem suas dívidas.",
+    description="Bem vindo ao API para o SaaS Meta Diária, focado em ajudar usuários a quitarem suas dívidas.",
     version="0.1.0"
 ) # <--- O parêntese de fechamento deve estar aqui.
 
